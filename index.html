@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISO Incident Pro — Test Manager Simulator</title>
+  <meta name="description" content="Modular ISO/IEC 29119 learning game with selectable topics, question count, and question types." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+<div id="root">
+  <header>
+    <button class="brand-button" type="button" onclick="returnToSetup()" aria-label="Return to setup screen">
+      <span class="logo">ISO <em>Incident</em></span>
+    </button>
+    <div class="hud-right">
+      <div class="stat-pill">Score <span class="val" id="hud-score">0</span></div>
+      <div class="stat-pill">Question <span class="val" id="hud-q">0/0</span></div>
+      <div class="progress-dots" id="prog-dots" aria-label="Question progress"></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="setup" class="screen active" aria-labelledby="setup-title">
+      <div class="setup-shell">
+        <div class="hero-card">
+          <div class="intro-eyebrow">ISO/IEC 29119-1:2022 · ISO/IEC 29119-2:2021</div>
+          <h1 id="setup-title" class="intro-title">ISO <em>Incident</em> Pro</h1>
+          <p class="intro-desc">
+            Configure the quiz before starting. Choose topics, question types, and the number of questions pulled from the question bank.
+          </p>
+
+          <div class="bank-summary" id="bank-summary"></div>
+        </div>
+
+        <form class="setup-card" id="setup-form" onsubmit="event.preventDefault(); startGame();">
+          <div class="setup-section">
+            <div class="section-head">
+              <h2>1. Select topics</h2>
+              <button class="mini-btn" type="button" onclick="selectAllTopics()">Select all</button>
+            </div>
+            <div class="chip-grid" id="topic-options"></div>
+          </div>
+
+          <div class="setup-section">
+            <div class="section-head">
+              <h2>2. Select question types</h2>
+              <button class="mini-btn" type="button" onclick="selectAllTypes()">Select all</button>
+            </div>
+            <div class="chip-grid compact" id="type-options"></div>
+          </div>
+
+          <div class="setup-section two-col">
+            <label class="field-card" for="question-count">
+              <span>3. Number of questions</span>
+              <input id="question-count" type="number" min="1" value="40" />
+              <small id="question-count-help">You can choose up to 40 questions, limited by the selected pool.</small>
+            </label>
+            <label class="field-card checkbox-card">
+              <input id="shuffle-enabled" type="checkbox" checked />
+              <span>Shuffle selected questions</span>
+              <small>Turn off for predictable debugging.</small>
+            </label>
+          </div>
+
+          <div class="setup-actions">
+            <button class="start-btn" type="submit">Start Selected Quiz →</button>
+            <button class="secondary-btn" type="button" onclick="previewPool()">Preview selected pool</button>
+          </div>
+          <div class="setup-message" id="setup-message" role="status"></div>
+        </form>
+      </div>
+    </section>
+
+    <section id="game" class="screen" aria-live="polite">
+      <div class="game-inner">
+        <div class="stage-header">
+          <span class="stage-counter" id="stage-num">0 / 0</span>
+          <span class="stage-title" id="stage-title"></span>
+          <span class="type-badge" id="stage-badge"></span>
+          <div class="top-tools">
+            <button class="tool-btn" id="back-btn" type="button" onclick="previousStage()">Back</button>
+            <button class="tool-btn" id="hint-btn" type="button" onclick="toggleHint()">Hint</button>
+            <button class="tool-btn" type="button" onclick="restartCurrentQuiz()">Restart</button>
+          </div>
+        </div>
+        <div class="q-area" id="q-area"></div>
+        <div class="feedback-box" id="feedback"></div>
+        <button class="next-btn" id="next-btn" type="button" onclick="nextStage()">Next Incident →</button>
+      </div>
+    </section>
+
+    <section id="results" class="screen">
+      <div class="results-card">
+        <div class="best-pill" id="best-score-pill"></div>
+        <div class="res-grade" id="res-grade">A</div>
+        <div class="res-title" id="res-title">Proficient</div>
+        <div class="res-sub" id="res-sub"></div>
+        <div class="breakdown">
+          <div class="bk"><span class="bk-val" id="rb-score">0</span><span class="bk-label">Score</span></div>
+          <div class="bk"><span class="bk-val" id="rb-correct">0</span><span class="bk-label">Correct</span></div>
+          <div class="bk"><span class="bk-val" id="rb-wrong">0</span><span class="bk-label">Wrong</span></div>
+        </div>
+        <div class="res-learning" id="res-learning"></div>
+        <div class="review-list" id="review-list"></div>
+        <div class="result-actions">
+          <button class="retry-btn" type="button" onclick="restartCurrentQuiz()">↺ Retry Same Setup</button>
+          <button class="secondary-btn" type="button" onclick="returnToSetup()">Change Setup</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="data/questions.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
